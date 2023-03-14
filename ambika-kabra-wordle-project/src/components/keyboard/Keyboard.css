@@ -45,9 +45,9 @@
     background-color: #3a3a3cb8;
 }
 
-@media (width <= 700px) {
+@media (max-width: 1024px), only screen and (max-device-width : 1024px) and (-webkit-min-device-pixel-ratio : 2) {
     .wordle-keyboard {
-        width: 100%;
+        width: 95%;
     }
 
     .key {

@@ -43,10 +43,15 @@
     }
 }
 
-@media (width <= 320px) {
+@media (max-width: 320px), only screen and (max-device-width : 320px) and (-webkit-min-device-pixel-ratio : 2) {
     .letter-tile {
         width: 2rem;
         height: 2rem;
+    }
+}
+
+@media (max-width: 1024px), only screen and (max-device-width : 1024px) and (-webkit-min-device-pixel-ratio : 2) {
+    .letter-tile {
         font-size: 1.5rem;
     }
 }
