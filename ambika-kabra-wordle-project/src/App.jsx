@@ -79,6 +79,7 @@ function App() {
     setCurrentAttempt({...currentAttempt, letterPos: currentAttempt.letterPos + 1});   
   } 
   
+  //Function preforming enter key
   const onEnter = () => {
     if((gameDifficulty === NORMAL_MODE && currentAttempt.letterPos !== NORMAL_NUM_LETTERS) || (gameDifficulty === HARD_MODE && currentAttempt.letterPos !== HARD_NUM_LETTERS)) {
       setGameError({isError: true, errorMsg: "word is too short!"});

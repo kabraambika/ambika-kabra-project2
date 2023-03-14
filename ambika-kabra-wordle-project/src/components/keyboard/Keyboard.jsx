@@ -67,14 +67,14 @@ function Keyboard() {
                 })}
             </div>
             <div className="row3">
-                <Key key={"ENTER"} keyVal={"ENTER"} bigKey/>
+                <Key key={"DELETE"} keyVal={"DELETE"} bigKey/> 
                 {keysRow3.map((key) => {
                     const isCorrect = coloredLetters.greenLetters !== undefined && coloredLetters.greenLetters.length > 0 && coloredLetters.greenLetters.includes(key);
                     const isAlmost = coloredLetters.yellowLetters !== undefined && coloredLetters.yellowLetters.length > 0 && coloredLetters.yellowLetters.includes(key);
                     const isIncorrect = coloredLetters.disabledLetters !== undefined && coloredLetters.disabledLetters.length > 0 && coloredLetters.disabledLetters.includes(key);
                     return <Key key={key} keyVal = {key} iscorrect={isCorrect} isalmost={isAlmost} iserror={isIncorrect}/>
                 })}
-                <Key key={"DELETE"} keyVal={"DELETE"} bigKey/> 
+                <Key key={"ENTER"} keyVal={"ENTER"} bigKey/>
             </div>
         </div>
     )
