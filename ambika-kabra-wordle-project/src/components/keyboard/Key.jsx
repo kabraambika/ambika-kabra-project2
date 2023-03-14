@@ -1,6 +1,7 @@
 import React, {useContext} from "react";
 import { AppContext } from "../../App";
 
+//This component represents individual key of keyboard component
 function Key({keyVal, bigKey, disabled, isalmost, iscorrect, iserror}) {
     //using AppContext provided in App.jsx
     const {onEnter, onDelete, onSelectLetter} = useContext(AppContext);

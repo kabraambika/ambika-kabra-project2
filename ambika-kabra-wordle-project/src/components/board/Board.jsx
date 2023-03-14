@@ -4,6 +4,7 @@ import { HARD_MODE, NORMAL_MODE } from "../../constants/GameConstants";
 import Tile from '../tile/Tile'
 import '../board/Board.css'
 
+//This component represents normal mode board or hard mode board and has Tile component as child.
 function Board() {
     const { gameDifficulty } = useContext(AppContext);
     return (

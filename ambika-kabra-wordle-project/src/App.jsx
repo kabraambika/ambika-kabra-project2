@@ -1,16 +1,18 @@
 import './App.css'
 import { useParams } from 'react-router'
-import { useState, useMemo, createContext, useEffect } from 'react';
-import { HARD_MODE, NORMAL_MODE, NORMAL_NUM_LETTERS, HARD_NUM_LETTERS } from './constants/GameConstants';
-import { normalBoardDefault, hardBoardDefault } from './constants/BoardUtils';
-import { createDictionary, createRandomSevenLetterWord, createRandomSixLetterWord } from './services/BoardService';
-import Keyboard from './components/keyboard/Keyboard';
-import Board from './components/board/Board';
-import GameError from './components/modals/GameError';
-import GameOver from './components/modals/GameOver';
+import { useState, useMemo, createContext, useEffect } from 'react'
+import { HARD_MODE, NORMAL_MODE, NORMAL_NUM_LETTERS, HARD_NUM_LETTERS, NORMAL_CHANCES, HARD_CHANCES } from './constants/GameConstants'
+import { normalBoardDefault, hardBoardDefault } from './constants/BoardUtils'
+import { createDictionary, createRandomSevenLetterWord, createRandomSixLetterWord } from './services/BoardService'
+import Keyboard from './components/keyboard/Keyboard'
+import Board from './components/board/Board'
+import GameError from './components/modals/GameError'
+import GameOver from './components/modals/GameOver'
 
+//context for state management 
 export const AppContext = createContext();
 
+//Entry point for game
 function App() {
   const pathParameters = useParams();
   const [gameDifficulty, setGameDifficulty] = useState(pathParameters.difficulty);
@@ -23,6 +25,7 @@ function App() {
   const [gameError, setGameError] = useState({isError: false, errorMsg: ""});
   const [gameReset, setGameReset] = useState(false);
 
+  //reset all states when restarting the game
   useEffect(() => {
     setGameReset(false);
     setColoredLetters({disabledLetters: [], greenLetters: [], yellowLetters:[]});
@@ -33,7 +36,7 @@ function App() {
     for (let row of modBoard) {
       row.fill("", 0, row.length);
     }
-    
+
     setGameBoard(modBoard);
     if(gameDifficulty === NORMAL_MODE) {
       createRandomSixLetterWord().then((randomWord) => {
@@ -47,6 +50,7 @@ function App() {
     }
 },[gameReset]);
 
+  //cache all word set and get random word
   useEffect(() => {
     createDictionary().then((words) => {
       setWordDictionarySet(words.wordSet);
@@ -63,8 +67,9 @@ function App() {
     }
   }, []);
 
+  //on click of any letter key of keyboard
   const onSelectLetter = (keyVal) => {
-    if((gameDifficulty === NORMAL_MODE && currentAttempt.letterPos > 5) || (gameDifficulty === HARD_MODE && currentAttempt.letterPos > 6)) 
+    if((gameDifficulty === NORMAL_MODE && currentAttempt.letterPos > NORMAL_CHANCES-1) || (gameDifficulty === HARD_MODE && currentAttempt.letterPos > HARD_CHANCES-1)) 
       return;
 
     setGameError({isError: false, errorMsg: ""});
@@ -75,7 +80,7 @@ function App() {
   } 
   
   const onEnter = () => {
-    if((gameDifficulty === NORMAL_MODE && currentAttempt.letterPos !== 6) || (gameDifficulty === HARD_MODE && currentAttempt.letterPos !== 7)) {
+    if((gameDifficulty === NORMAL_MODE && currentAttempt.letterPos !== NORMAL_NUM_LETTERS) || (gameDifficulty === HARD_MODE && currentAttempt.letterPos !== HARD_NUM_LETTERS)) {
       setGameError({isError: true, errorMsg: "word is too short!"});
       return;
     }
@@ -101,18 +106,21 @@ function App() {
       return;
     }
 
+    updateGameOverState(currentWord);
+  }
+  
+  //Incase of attempts exhausted or correct word found, change state of gameOver 
+  function updateGameOverState(currentWord) {
     //correct word
     if(currentWord === gameWord) {
       setGameOver({gameOver: true, guessedWord: true});
     }
-    else if(gameDifficulty === NORMAL_MODE && currentAttempt.attempt === 5) {
-      setGameOver({gameOver: true, guessedWord: false});
-    }
-    else if (gameDifficulty === HARD_MODE && currentAttempt.attempt === 4) {
+    else if((gameDifficulty === NORMAL_MODE && currentAttempt.attempt === NORMAL_CHANCES-1) || (gameDifficulty === HARD_MODE && currentAttempt.attempt === HARD_CHANCES-1)) {
       setGameOver({gameOver: true, guessedWord: false});
     }
   }
-  
+
+  //On clicking delete key
   const onDelete = () => {
     if(gameError.isError) {
       setGameError({isError: false, errorMsg: ""});

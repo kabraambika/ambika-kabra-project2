@@ -3,8 +3,9 @@ import { Button, Alert } from "react-bootstrap";
 import { AppContext } from "../../App";
 import { Link } from 'react-router-dom';
 
+//This component is used to represent game over view after word found or all attempts
 function GameOver() {
-    const {gameOver, gameWord, currentAttempt, gameDifficulty, setGameReset} = useContext(AppContext);
+    const { gameOver, gameWord, currentAttempt, gameDifficulty, setGameReset } = useContext(AppContext);
 
     const handleReset = () => {
         setGameReset(true);

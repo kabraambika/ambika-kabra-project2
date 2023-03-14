@@ -1,12 +1,13 @@
 import React, { useContext, useEffect } from "react";
 import { AppContext } from "../../App";
 import '../tile/Tile.css'
+
+//This Tile component is child of board component which represents each letter
 function Tile({attemptedValue, letterPosition}) {
     const {gameBoard, gameWord, currentAttempt, coloredLetters, setColoredLetters} = useContext(AppContext);
     const currLetter = gameBoard[attemptedValue][letterPosition];
     const isCorrect = gameWord[letterPosition] === currLetter;
     const isAlmost = !isCorrect && currLetter !== "" && gameWord.includes(currLetter);
-    const letterState = currentAttempt.attempt > attemptedValue && (isCorrect ? "correct" : isAlmost ? "almost" : "incorrect");
     
     useEffect(() => {
             let disabledLetterArr = coloredLetters.disabledLetters;

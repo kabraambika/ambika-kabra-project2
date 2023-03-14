@@ -2,6 +2,7 @@ import { Container } from "react-bootstrap";
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 
+//This component is used to show navigation bar on top of this app having project name and two menus, how to play and home
 function NavigationBar() {
     return (
         <Navbar collapseOnSelect sticky="top" expand="lg" bg="dark" variant="dark">

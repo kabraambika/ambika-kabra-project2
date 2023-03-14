@@ -3,6 +3,7 @@ import { AppContext } from "../../App";
 import Key from "./Key";
 import '../keyboard/Keyboard.css'
 
+//This component is used to show keyboard for game
 function Keyboard() {
     const keysRow1 = ["Q","W","E","R","T","Y","U","I","O","P"];
     const keysRow2 = ["A","S", "D","F","G","H","J","K","L"];

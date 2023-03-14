@@ -1,6 +1,8 @@
 import React from "react";
-import { Container } from "react-bootstrap";
+import { Container } from "react-bootstrap"
 import '../gameinfo/Instructions.css'
+
+//This component is used to represent how to play page
 function Instructions() {
     return (
         <Container className="instructions-container d-flex flex-column justify-content-center">

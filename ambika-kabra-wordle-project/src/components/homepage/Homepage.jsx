@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import '../homepage/Homepage.css'
 import wordleImage from '../../assets/wordle-icon.png'
 
+//This component represent the home page of this app, can navigate to how to page, hard and normal mode
 function Homepage() {
     return (
         <div className="container">

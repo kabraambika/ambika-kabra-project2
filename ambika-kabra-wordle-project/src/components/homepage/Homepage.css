@@ -2,15 +2,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: calc(100vh - 56px);
     justify-content: center;
     margin: auto;
     top: 56px;
     position: relative;
-}
-
-@media (width < 768px) {
-    .homepage-container {
-        height: 100%;
-    }
 }
