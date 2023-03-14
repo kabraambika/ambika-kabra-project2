@@ -1,0 +1,56 @@
+.wordle-keyboard {
+    width: 700px;
+    height: 180px;
+    position: absolute;
+    bottom: 0;
+}
+
+.row1, .row2, .row3 {
+    flex: 33%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 3px;
+}
+
+.key{
+    width: 40px;
+    height: 40px;
+    margin: 3px;
+    border-radius: 4px;
+    display: grid;
+    place-items: center;
+    background-color: #779799;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    cursor: pointer;
+}
+
+#big {
+    width: 100px;
+}
+#disabled {
+    background-color: #3a393c;
+}
+
+.correct {
+    background-color: green;
+}
+
+.almost {
+    background-color: #b59f3b;
+}
+
+.incorrect {
+    background-color: #3a3a3cb8;
+}
+
+@media (width <= 700px) {
+    .wordle-keyboard {
+        width: 100%;
+    }
+
+    .key {
+        font-size: 0.6rem;
+    }
+}

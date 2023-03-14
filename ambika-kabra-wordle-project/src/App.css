@@ -1,0 +1,18 @@
+.margin-top-1rem {
+    margin-top: 1rem;
+}
+
+.margin-left-1rem {
+    margin-left: 1rem;
+}
+
+.game-over-container {
+    align-items: center;
+    height: calc(100vh - 56px);
+}
+
+@media (width < 768px) {
+    .gameover-overlay {
+        margin: 2rem;
+    }
+}

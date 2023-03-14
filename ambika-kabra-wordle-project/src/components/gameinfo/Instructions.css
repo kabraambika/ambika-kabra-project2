@@ -1,0 +1,52 @@
+.instructions-container {
+    height: calc(100vh - 56px);
+    top: 56px;
+    position: relative;
+}
+
+.tile-container {
+    width: 180px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 2px;
+  }
+  
+.tile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    width: 30px;
+    height: 30px;
+    background: white;
+    border: 2px solid black;
+    border-radius: 6px;
+    animation: flip 1000ms ease forwards;
+}
+
+.correct {
+    background-color: green;
+}
+
+.almost {
+    background-color: #b59f3b;
+}
+
+.incorrect {
+    background-color: #3a3a3cb8;
+}
+
+@keyframes flip {
+    0% {
+        transform: scaleY(1);
+    }
+
+    50% {
+        background: white;
+        transform: scaleY(0);
+    }
+
+    100% {
+        transform: scaleY(1);
+    }
+}
