@@ -8,7 +8,7 @@ function Homepage() {
     return (
         <div className="container">
             <div className="homepage-container">
-                <Image fluid roundedCircle src="../../assets/wordle-icon.png"/>
+                <Image fluid roundedCircle src="/src/assets/wordle-icon.png"/>
                 <h1>Wordle</h1>
                 <Container className="d-flex flex-row flex-wrap align-items-center justify-content-center">
                     <Link to={"/instructions"}>
