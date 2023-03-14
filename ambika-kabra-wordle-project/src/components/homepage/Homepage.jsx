@@ -3,12 +3,13 @@ import { Container, Button } from "react-bootstrap"
 import Image from 'react-bootstrap/Image'
 import { Link } from 'react-router-dom';
 import '../homepage/Homepage.css'
+import wordleImage from '../../assets/wordle-icon.png'
 
 function Homepage() {
     return (
         <div className="container">
             <div className="homepage-container">
-                <Image fluid roundedCircle src="/src/assets/wordle-icon.png"/>
+                <Image fluid roundedCircle src={wordleImage}/>
                 <h1>Wordle</h1>
                 <Container className="d-flex flex-row flex-wrap align-items-center justify-content-center">
                     <Link to={"/instructions"}>
