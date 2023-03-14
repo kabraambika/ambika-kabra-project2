@@ -69,7 +69,7 @@ function App() {
 
   //on click of any letter key of keyboard
   const onSelectLetter = (keyVal) => {
-    if((gameDifficulty === NORMAL_MODE && currentAttempt.letterPos > NORMAL_CHANCES-1) || (gameDifficulty === HARD_MODE && currentAttempt.letterPos > HARD_CHANCES-1)) 
+    if((gameDifficulty === NORMAL_MODE && currentAttempt.letterPos > NORMAL_NUM_LETTERS-1) || (gameDifficulty === HARD_MODE && currentAttempt.letterPos > HARD_NUM_LETTERS-1)) 
       return;
 
     setGameError({isError: false, errorMsg: ""});
