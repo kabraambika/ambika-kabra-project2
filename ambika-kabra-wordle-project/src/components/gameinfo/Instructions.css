@@ -1,6 +1,5 @@
 .instructions-container {
-    height: calc(100vh - 56px);
-    top: 56px;
+    top: 10px;
     position: relative;
 }
 

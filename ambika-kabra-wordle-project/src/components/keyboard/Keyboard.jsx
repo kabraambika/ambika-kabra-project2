@@ -1,13 +1,33 @@
-import React, {useCallback, useEffect, useContext} from "react";
+import React, {useCallback, useEffect, useContext, useMemo } from "react";
 import { AppContext } from "../../App";
 import Key from "./Key";
 import '../keyboard/Keyboard.css'
+
+//fuction to create rows for keyboard
+function KeyRow({keys, coloredLetters}) {
+    const keysWithColor = keys.map(key => {
+        const { greenLetters = new Set(), yellowLetters = new Set(), disabledLetters = new Set() } = coloredLetters;
+        const isCorrect = greenLetters.has(key);
+        const isAlmost = yellowLetters.has(key);
+        const isIncorrect = disabledLetters.has(key);
+        if(key === "DELETE"){
+            return <Key key={"DELETE"} keyVal={"DELETE"} bigKey/>;
+        }
+        else if(key === "ENTER") {
+            return <Key key={"ENTER"} keyVal={"ENTER"} bigKey/>
+        }
+        else {
+            return <Key key={key} keyVal={key} iscorrect={isCorrect} isalmost={isAlmost} iserror={isIncorrect} />;
+        }
+    });
+    return <div className="keyboard-row">{keysWithColor}</div>;
+}
 
 //This component is used to show keyboard for game
 function Keyboard() {
     const keysRow1 = ["Q","W","E","R","T","Y","U","I","O","P"];
     const keysRow2 = ["A","S", "D","F","G","H","J","K","L"];
-    const keysRow3 = ["Z","X","C","V","B","N","M"];
+    const keysRow3 = ["DELETE","Z","X","C","V","B","N","M","ENTER"];
 
     const {onEnter, onDelete, onSelectLetter, coloredLetters} = useContext(AppContext);
     
@@ -20,24 +40,17 @@ function Keyboard() {
             onDelete();
         }
         else {
-            keysRow1.forEach((key) => {
-                if(key.toLowerCase() === event.key.toLowerCase()) {
-                    onSelectLetter(key);
-                }
-            });
-
-            keysRow2.forEach((key) => {
-                if(key.toLowerCase() === event.key.toLowerCase()) {
-                    onSelectLetter(key);
-                }
-            });
-            keysRow3.forEach((key) => {
-                if(key.toLowerCase() === event.key.toLowerCase()) {
-                    onSelectLetter(key);
-                }
+            [keysRow1, keysRow2, keysRow3].forEach(keys => {
+                keys.forEach(key => {
+                    if(key !== "DELETE" || key !== "ENTER") {
+                        if(key.toLowerCase() === event.key.toLowerCase()) {
+                            onSelectLetter(key);
+                        }
+                    }
+                });
             });
         }
-    });
+    }, [onDelete, onEnter, onSelectLetter]);
 
     //adding event listener and removing for keydown
     useEffect(() => {
@@ -48,36 +61,17 @@ function Keyboard() {
         }
     }, [handleKeyboard]);
 
+    const memoizedKeysRow1 = useMemo(() => <KeyRow keys={keysRow1} coloredLetters={coloredLetters} />, [coloredLetters, keysRow1]);
+    const memoizedKeysRow2 = useMemo(() => <KeyRow keys={keysRow2} coloredLetters={coloredLetters} />, [coloredLetters, keysRow2]);
+    const memoizedKeysRow3 = useMemo(() => <KeyRow keys={keysRow3} coloredLetters={coloredLetters} />, [coloredLetters, keysRow3]);
+    
     return (
         <div className="wordle-keyboard" onKeyDown={handleKeyboard}>
-            <div className="row1">
-                {keysRow1.map((key) => {
-                    const isCorrect = coloredLetters.greenLetters !== undefined && coloredLetters.greenLetters.length > 0 && coloredLetters.greenLetters.includes(key);
-                    const isAlmost = coloredLetters.yellowLetters !== undefined && coloredLetters.yellowLetters.length > 0 && coloredLetters.yellowLetters.includes(key);
-                    const isIncorrect = coloredLetters.disabledLetters !== undefined && coloredLetters.disabledLetters.length > 0 && coloredLetters.disabledLetters.includes(key);
-                    return <Key key={key} keyVal = {key} iscorrect={isCorrect} isalmost={isAlmost} iserror={isIncorrect}/>
-                })}
-            </div>
-            <div className="row2">
-                {keysRow2.map((key) => {
-                    const isCorrect = coloredLetters.greenLetters !== undefined && coloredLetters.greenLetters.length > 0 && coloredLetters.greenLetters.includes(key);
-                    const isAlmost = coloredLetters.yellowLetters !== undefined && coloredLetters.yellowLetters.length > 0 && coloredLetters.yellowLetters.includes(key);
-                    const isIncorrect = coloredLetters.disabledLetters !== undefined && coloredLetters.disabledLetters.length > 0 && coloredLetters.disabledLetters.includes(key);
-                    return <Key key={key} keyVal = {key} iscorrect={isCorrect} isalmost={isAlmost} iserror={isIncorrect}/>
-                })}
-            </div>
-            <div className="row3">
-                <Key key={"DELETE"} keyVal={"DELETE"} bigKey/> 
-                {keysRow3.map((key) => {
-                    const isCorrect = coloredLetters.greenLetters !== undefined && coloredLetters.greenLetters.length > 0 && coloredLetters.greenLetters.includes(key);
-                    const isAlmost = coloredLetters.yellowLetters !== undefined && coloredLetters.yellowLetters.length > 0 && coloredLetters.yellowLetters.includes(key);
-                    const isIncorrect = coloredLetters.disabledLetters !== undefined && coloredLetters.disabledLetters.length > 0 && coloredLetters.disabledLetters.includes(key);
-                    return <Key key={key} keyVal = {key} iscorrect={isCorrect} isalmost={isAlmost} iserror={isIncorrect}/>
-                })}
-                <Key key={"ENTER"} keyVal={"ENTER"} bigKey/>
-            </div>
+          {memoizedKeysRow1}
+          {memoizedKeysRow2}
+          {memoizedKeysRow3}
         </div>
-    )
+    );
 }
 
 export default Keyboard

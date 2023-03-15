@@ -18,7 +18,7 @@ function App() {
   const [gameDifficulty, setGameDifficulty] = useState(pathParameters.difficulty);
   const [gameBoard, setGameBoard] = useState(gameDifficulty === NORMAL_MODE ? normalBoardDefault : gameDifficulty === HARD_MODE && hardBoardDefault);
   const [currentAttempt, setCurrentAttempt] = useState({attempt : 0, letterPos: 0});
-  const [coloredLetters, setColoredLetters] = useState({disabledLetters: [], greenLetters: [], yellowLetters:[]});
+  const [coloredLetters, setColoredLetters] = useState({disabledLetters: new Set(), greenLetters: new Set(), yellowLetters: new Set()});
   const [wordDictionarySet, setWordDictionarySet] = useState(new Set());
   const [gameWord, setGameWord] = useState("");
   const [gameOver, setGameOver] = useState({gameOver: false, guessedWord: false});
@@ -28,16 +28,13 @@ function App() {
   //reset all states when restarting the game
   useEffect(() => {
     setGameReset(false);
-    setColoredLetters({disabledLetters: [], greenLetters: [], yellowLetters:[]});
+    setColoredLetters({disabledLetters: new Set(), greenLetters: new Set(), yellowLetters: new Set()});
     setCurrentAttempt({attempt : 0, letterPos: 0});
     setGameOver({gameOver: false, guessedWord: false});
-    const modBoard = gameBoard;
-
-    for (let row of modBoard) {
-      row.fill("", 0, row.length);
-    }
-
+    
+    const modBoard = gameBoard.map(row => row.fill("", 0, row.length));
     setGameBoard(modBoard);
+    
     if(gameDifficulty === NORMAL_MODE) {
       createRandomSixLetterWord().then((randomWord) => {
         setGameWord(randomWord.currentWord);
@@ -52,50 +49,50 @@ function App() {
 
   //cache all word set and get random word
   useEffect(() => {
-    createDictionary().then((words) => {
+    async function fetchWords() {
+      const words = await createDictionary();
       setWordDictionarySet(words.wordSet);
-    });
-    if(gameDifficulty === NORMAL_MODE) {
-      createRandomSixLetterWord().then((randomWord) => {
-        setGameWord(randomWord.currentWord);
-      });
-    }
-    if(gameDifficulty === HARD_MODE) {
-      createRandomSevenLetterWord().then((hardRandWord) => {
+      if (gameDifficulty === NORMAL_MODE) {
+        const randNormalWord = await createRandomSixLetterWord();
+        setGameWord(randNormalWord.currentWord);
+      }
+      if (gameDifficulty === HARD_MODE) {
+        const hardRandWord = await createRandomSevenLetterWord();
         setGameWord(hardRandWord.currentWord);
-      });
+      }
     }
-  }, []);
+    fetchWords();
+  }, [gameDifficulty]);
 
   //on click of any letter key of keyboard
   const onSelectLetter = (keyVal) => {
-    if((gameDifficulty === NORMAL_MODE && currentAttempt.letterPos > NORMAL_NUM_LETTERS-1) || (gameDifficulty === HARD_MODE && currentAttempt.letterPos > HARD_NUM_LETTERS-1)) 
-      return;
+
+    const maxNumLetters = gameDifficulty === NORMAL_MODE ? NORMAL_NUM_LETTERS : HARD_NUM_LETTERS; //the maximum number of letters allowed based on the current game difficulty
+    if (currentAttempt.letterPos > maxNumLetters - 1) return; // determine if the current letter position is valid
 
     setGameError({isError: false, errorMsg: ""});
-    const modifiedBoard = [...gameBoard];
-    modifiedBoard[currentAttempt.attempt][currentAttempt.letterPos] = keyVal;
-    setGameBoard(modifiedBoard);
-    setCurrentAttempt({...currentAttempt, letterPos: currentAttempt.letterPos + 1});   
+    setGameBoard((prevBoard) => {
+      const modifiedBoard = [...prevBoard];
+      modifiedBoard[currentAttempt.attempt][currentAttempt.letterPos] = keyVal;
+      return modifiedBoard;
+    });
+    setCurrentAttempt((prevAttempt) => ({ ...prevAttempt, letterPos: prevAttempt.letterPos + 1 }));  
   } 
   
   //Function preforming enter key
   const onEnter = () => {
-    if((gameDifficulty === NORMAL_MODE && currentAttempt.letterPos !== NORMAL_NUM_LETTERS) || (gameDifficulty === HARD_MODE && currentAttempt.letterPos !== HARD_NUM_LETTERS)) {
-      setGameError({isError: true, errorMsg: "word is too short!"});
+    const isWordTooShort = (gameDifficulty === NORMAL_MODE && currentAttempt.letterPos !== NORMAL_NUM_LETTERS) || (gameDifficulty === HARD_MODE && currentAttempt.letterPos !== HARD_NUM_LETTERS);
+  
+    if(isWordTooShort) {
+      setGameError({isError: true, errorMsg: "Word is too short!"});
       return;
     }
-    
+
     let currentWord = "";
-    if(gameDifficulty === NORMAL_MODE) {
-      for(let i=0;i<NORMAL_NUM_LETTERS;i++) {
-        currentWord += gameBoard[currentAttempt.attempt][i];
-      }
-    }
-    else if(gameDifficulty === HARD_MODE) {
-      for(let i=0;i<HARD_NUM_LETTERS;i++) {
-        currentWord += gameBoard[currentAttempt.attempt][i];
-      }
+    const numLetters = gameDifficulty === NORMAL_MODE ? NORMAL_NUM_LETTERS : HARD_NUM_LETTERS;
+    
+    for(let i=0; i<numLetters; i++) {
+      currentWord += gameBoard[currentAttempt.attempt][i];
     }
   
     //spell check 
@@ -123,9 +120,8 @@ function App() {
 
   //On clicking delete key
   const onDelete = () => {
-    if(gameError.isError) {
-      setGameError({isError: false, errorMsg: ""});
-    }
+    setGameError({isError: false, errorMsg: ""});
+    
     if(currentAttempt.letterPos === 0)
       return;
 
@@ -135,13 +131,32 @@ function App() {
     setCurrentAttempt({...currentAttempt, letterPos: currentAttempt.letterPos - 1});
   }
 
-  const wordleAppProviderValue = useMemo(() => ({gameReset, setGameReset, gameError, setGameError, gameDifficulty, setGameDifficulty, gameBoard, setGameBoard, currentAttempt, setCurrentAttempt, coloredLetters, setColoredLetters, gameWord, setGameWord, onDelete, onEnter, onSelectLetter, gameOver, setGameOver}));
+  const wordleAppProviderValue = useMemo(() => ({
+    gameReset, 
+    setGameReset, 
+    gameError, 
+    setGameError,
+    gameDifficulty, 
+    setGameDifficulty, 
+    gameBoard, 
+    setGameBoard, 
+    currentAttempt, 
+    setCurrentAttempt, 
+    coloredLetters, 
+    setColoredLetters, 
+    gameWord, 
+    setGameWord, 
+    onDelete, 
+    onEnter,
+     onSelectLetter, 
+     gameOver, 
+     setGameOver}));
 
   return (
     <div className="App">
       <AppContext.Provider value={ wordleAppProviderValue }>
         <div className={"app-container d-flex justify-content-center " + (gameOver.gameOver ? " game-over-container" : "")}>
-          {gameError.isError && <div className='position-absolute'><GameError/></div>}
+          {gameError.isError && <div className='position-absolute game-error-container'><GameError/></div>}
           {gameOver.gameOver ? <div className='gameover-overlay'><GameOver/></div> : <><Board/><Keyboard/></>}
         </div>
       </AppContext.Provider>
