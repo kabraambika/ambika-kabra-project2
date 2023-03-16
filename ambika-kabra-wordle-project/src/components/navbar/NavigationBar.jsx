@@ -1,8 +1,7 @@
-import Navbar from 'react-bootstrap/Navbar';
+import Navbar from 'react-bootstrap/Navbar'
 import { Container } from "react-bootstrap"
 import Nav from 'react-bootstrap/Nav'
-import Navbar from 'react-bootstrap/Navbar'
-import { Link } from "react-router-dom"
+
 //This component is used to show navigation bar on top of this app having project name and two menus, how to play and home
 function NavigationBar() {
     return (
