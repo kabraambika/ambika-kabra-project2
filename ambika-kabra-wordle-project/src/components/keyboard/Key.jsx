@@ -1,5 +1,5 @@
 import React, {useContext} from "react";
-import { AppContext } from "../../App";
+import { AppContext } from "../../context/GameState";
 
 //This component represents individual key of keyboard component
 function Key({keyVal, bigKey, disabled, isalmost, iscorrect, iserror}) {

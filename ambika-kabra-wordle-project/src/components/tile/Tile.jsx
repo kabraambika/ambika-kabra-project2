@@ -1,56 +1,34 @@
-import React, { useContext, useEffect, useMemo } from "react";
-import { AppContext } from "../../App";
+import React, { useContext, useMemo } from "react";
+import { AppContext } from "../../context/GameState";
 import '../tile/Tile.css'
+import { useColoredLetters } from "../../lib/GameLogic";
 
 //This Tile component is child of board component which represents each letter
 function Tile({attemptedValue, letterPosition}) {
-    const {gameBoard, gameWord, currentAttempt, coloredLetters, setColoredLetters, gameError} = useContext(AppContext);
-    const currLetter = gameBoard[attemptedValue][letterPosition];
+    const {state, dispatch} = useContext(AppContext);
+    const currLetter = state.gameBoard[attemptedValue][letterPosition];
     
-    const isCorrect = useMemo(() => gameWord[letterPosition] === currLetter, [
+    const isCorrect = useMemo(() => state.gameWord[letterPosition] === currLetter, [
         currLetter,
-        gameWord,
+        state.gameWord,
         letterPosition,
     ]);
 
     const isAlmost = useMemo(
-        () => !isCorrect && currLetter !== "" && gameWord.includes(currLetter),
-        [currLetter, gameWord, isCorrect]
+        () => !isCorrect && currLetter !== "" && state.gameWord.includes(currLetter),
+        [currLetter, state.gameWord, isCorrect]
     );
-
-    useEffect(() => {
-        let { disabledLetters, greenLetters, yellowLetters } = coloredLetters;
-        const { attempt } = currentAttempt ?? {};
-        if (currLetter !== "" && attempt > attemptedValue) {
-          if (isCorrect) {
-            if (!greenLetters.has(currLetter)) {
-              greenLetters = [...greenLetters, currLetter];
-            }
-          } else if (isAlmost) {
-            if (!yellowLetters.has(currLetter)) {
-              yellowLetters = [...yellowLetters, currLetter];
-            }
-          } else {
-            if (!disabledLetters.has(currLetter)) {
-              disabledLetters = [...disabledLetters, currLetter];
-            }
-          }
-          setColoredLetters((prevState) => ({
-            ...prevState,
-            disabledLetters: new Set([...prevState.disabledLetters, ...disabledLetters]),
-            greenLetters: new Set([...prevState.greenLetters, ...greenLetters]),
-            yellowLetters: new Set([...prevState.yellowLetters, ...yellowLetters])
-          }));
-        }
-    }, [currentAttempt?.attempt]);
-
+    
+    //useEffect on every attempt
+    useColoredLetters(state.coloredLetters, state.currentAttempt, attemptedValue, currLetter, isCorrect, isAlmost, dispatch);
+    
     let letterStatus = "";
 
-    if(currentAttempt.attempt > attemptedValue) {
+    if(state.currentAttempt.attempt > attemptedValue && currLetter !== undefined && currLetter.length !== 0) {
         letterStatus = isCorrect ? "correct flip" : isAlmost ? "almost flip" : "incorrect flip";
     }
     
-    const errorStatus = (gameError.isError && currLetter !== "") ? "shake" : "";
+    const errorStatus = (state.gameError.isError && currLetter !== undefined && currLetter.length !== 0) ? "shake" : "";
 
     return(
         <div className={"letter-tile " + (errorStatus) + (letterStatus)}>{currLetter}</div>

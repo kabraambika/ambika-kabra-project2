@@ -1,27 +1,7 @@
 import React, {useCallback, useEffect, useContext, useMemo } from "react";
-import { AppContext } from "../../App";
-import Key from "./Key";
+import { AppContext } from "../../context/GameState";
 import '../keyboard/Keyboard.css'
-
-//fuction to create rows for keyboard
-function KeyRow({keys, coloredLetters}) {
-    const keysWithColor = keys.map(key => {
-        const { greenLetters = new Set(), yellowLetters = new Set(), disabledLetters = new Set() } = coloredLetters;
-        const isCorrect = greenLetters.has(key);
-        const isAlmost = yellowLetters.has(key);
-        const isIncorrect = disabledLetters.has(key);
-        if(key === "DELETE"){
-            return <Key key={"DELETE"} keyVal={"DELETE"} bigKey/>;
-        }
-        else if(key === "ENTER") {
-            return <Key key={"ENTER"} keyVal={"ENTER"} bigKey/>
-        }
-        else {
-            return <Key key={key} keyVal={key} iscorrect={isCorrect} isalmost={isAlmost} iserror={isIncorrect} />;
-        }
-    });
-    return <div className="keyboard-row">{keysWithColor}</div>;
-}
+import KeyRow from "./KeyRow";
 
 //This component is used to show keyboard for game
 function Keyboard() {
@@ -29,7 +9,7 @@ function Keyboard() {
     const keysRow2 = ["A","S", "D","F","G","H","J","K","L"];
     const keysRow3 = ["DELETE","Z","X","C","V","B","N","M","ENTER"];
 
-    const {onEnter, onDelete, onSelectLetter, coloredLetters} = useContext(AppContext);
+    const {onEnter, onDelete, onSelectLetter, state} = useContext(AppContext);
     
     //function to handle system keyboard as well
     const handleKeyboard = useCallback((event) => {
@@ -61,9 +41,9 @@ function Keyboard() {
         }
     }, [handleKeyboard]);
 
-    const memoizedKeysRow1 = useMemo(() => <KeyRow keys={keysRow1} coloredLetters={coloredLetters} />, [coloredLetters, keysRow1]);
-    const memoizedKeysRow2 = useMemo(() => <KeyRow keys={keysRow2} coloredLetters={coloredLetters} />, [coloredLetters, keysRow2]);
-    const memoizedKeysRow3 = useMemo(() => <KeyRow keys={keysRow3} coloredLetters={coloredLetters} />, [coloredLetters, keysRow3]);
+    const memoizedKeysRow1 = useMemo(() => <KeyRow keys={keysRow1} coloredLetters={state.coloredLetters} />, [state.coloredLetters, keysRow1]);
+    const memoizedKeysRow2 = useMemo(() => <KeyRow keys={keysRow2} coloredLetters={state.coloredLetters} />, [state.coloredLetters, keysRow2]);
+    const memoizedKeysRow3 = useMemo(() => <KeyRow keys={keysRow3} coloredLetters={state.coloredLetters} />, [state.coloredLetters, keysRow3]);
     
     return (
         <div className="wordle-keyboard" onKeyDown={handleKeyboard}>
