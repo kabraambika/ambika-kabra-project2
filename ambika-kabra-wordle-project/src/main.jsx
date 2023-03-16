@@ -14,7 +14,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <BrowserRouter>
           <NavigationBar/>
           <Routes>
-              <Route path="/" element={ <Homepage />} />
+              <Route exact path="/" element={ <Homepage />} />
               <Route path="/instructions" element={ <Instructions />} />
               <Route path="/game/:difficulty" element={ <App />} />
           </Routes>

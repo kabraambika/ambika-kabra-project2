@@ -1,7 +1,7 @@
-import React from "react";
+import React from "react"
 import { Container, Button } from "react-bootstrap"
 import Image from 'react-bootstrap/Image'
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
 import '../homepage/Homepage.css'
 import wordleImage from '../../assets/wordle-icon.png'
 
