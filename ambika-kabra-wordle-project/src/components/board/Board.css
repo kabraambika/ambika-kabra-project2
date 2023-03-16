@@ -7,5 +7,5 @@
     align-items: center;
     flex-direction: column;
     justify-content: center;
-    height: calc(100vh - (56px + 180px));
+    height: calc(100vh - (75px + 180px));
 }
