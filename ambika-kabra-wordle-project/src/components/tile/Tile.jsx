@@ -1,7 +1,7 @@
-import React, { useContext, useMemo } from "react";
-import { AppContext } from "../../context/GameState";
+import React, { useContext, useMemo } from "react"
+import { AppContext } from "../../context/GameState"
+import { useColoredLetters } from "../../lib/GameLogic"
 import '../tile/Tile.css'
-import { useColoredLetters } from "../../lib/GameLogic";
 
 //This Tile component is child of board component which represents each letter
 function Tile({attemptedValue, letterPosition}) {
@@ -28,7 +28,7 @@ function Tile({attemptedValue, letterPosition}) {
         letterStatus = isCorrect ? "correct flip" : isAlmost ? "almost flip" : "incorrect flip";
     }
     
-    const errorStatus = (state.gameError.isError && currLetter !== undefined && currLetter.length !== 0) ? "shake" : "";
+    const errorStatus = (letterStatus === "" && state.gameError.isError && currLetter !== undefined && currLetter.length !== 0) ? "shake" : "";
 
     return(
         <div className={"letter-tile " + (errorStatus) + (letterStatus)}>{currLetter}</div>
