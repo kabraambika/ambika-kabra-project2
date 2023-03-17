@@ -63,9 +63,9 @@ export const AppProvider = ({ children }) => {
     handleSelectedLetter(keyVal, state.gameDifficulty, state.currentAttempt, state.gameBoard, dispatch);
   }
 
-  const AppContextProviderValue = useMemo(() => ({state, dispatch, onSelectLetter, onDelete, onEnter}), []);
+  const AppContextProviderValue = useMemo(() => ({state, dispatch, onSelectLetter, onDelete, onEnter}), [state, dispatch, onSelectLetter, onDelete, onEnter]);
   return (
-    <AppContext.Provider value={AppContextProviderValue}>
+    <AppContext.Provider value={ AppContextProviderValue }>
       {children}
     </AppContext.Provider>
   );
