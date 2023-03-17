@@ -11,16 +11,8 @@ function NavigationBar() {
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="me-auto">
-                    <Link to={"/"} className="nav-link">
-                        <Nav.Link href="/">Home</Nav.Link>
-                    </Link>
-                    <Link to={"/instructions"} className="nav-link">
-                        <Nav.Link href="/instructions">
-                            How to play
-                        </Nav.Link>
-                    </Link>
-                    
-                    
+                    <Nav.Link as={Link} to={"/"}>Home</Nav.Link>
+                    <Nav.Link as={Link} to={"/instructions"}>How to play</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
         </Container>

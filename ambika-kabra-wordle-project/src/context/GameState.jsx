@@ -1,4 +1,4 @@
-import React, { createContext, useReducer } from 'react';
+import React, { createContext, useReducer, useMemo } from 'react';
 import { handleDeleteFeature, handleEnterFeature, handleSelectedLetter } from '../lib/Helper';
 import { normalBoardDefault } from '../constants/BoardUtils';
 
@@ -63,8 +63,9 @@ export const AppProvider = ({ children }) => {
     handleSelectedLetter(keyVal, state.gameDifficulty, state.currentAttempt, state.gameBoard, dispatch);
   }
 
+  const AppContextProviderValue = useMemo(() => ({state, dispatch, onSelectLetter, onDelete, onEnter}), []);
   return (
-    <AppContext.Provider value={{state, dispatch, onSelectLetter, onDelete, onEnter}}>
+    <AppContext.Provider value={AppContextProviderValue}>
       {children}
     </AppContext.Provider>
   );
